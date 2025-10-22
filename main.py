@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
+from starlette.staticfiles import StaticFiles
+from starlette.responses import FileResponse
+import os # <-- Import this
+
 
 app = FastAPI()
 
@@ -204,8 +208,13 @@ def calc_next(state: State):
 # -----------------------------
 # FastAPI Endpoint
 # -----------------------------
-@app.post("/")
+@app.post("/process/")
 async def process_request(state: State):
     new_state = calc_next(state)
+    # print(new_state)
     return new_state
+
+
+
+app.mount("/", StaticFiles(directory="static", html=True), name="frontend")
 
